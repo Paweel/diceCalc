@@ -4,9 +4,12 @@ options{tokenVocab=EquationLexer;}
 start
     : operation;
 
-
+dice
+    : Integer DiceSymbol Integer
+    ;
 literal
-	:	Integer
+	: Integer
+	| dice
 	;
 
 operation

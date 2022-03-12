@@ -5,5 +5,7 @@ Integer
 
 Add : '+';
 Multiply : '*';
-
+DiceSymbol
+    : 'K'
+    | 'k';
 Whitespace : [ \t\r\n]+ -> skip ;

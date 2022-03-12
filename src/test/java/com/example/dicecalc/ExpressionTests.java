@@ -2,7 +2,7 @@ package com.example.dicecalc;
 
 import com.example.dicecalc.math.operations.Add;
 import com.example.dicecalc.math.operations.Multiply;
-import com.example.dicecalc.math.value.DiceValue;
+import com.example.dicecalc.math.value.MulitpleDiceValue;
 import com.example.dicecalc.math.value.SimpleValue;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -50,9 +50,10 @@ public class ExpressionTests {
 
     @Test
     void diceValueTest() {
+        Long givenDiceAmount = 1L;
         Long givenMin = 5L;
         Long givenMax = 16L;
-        final Long evaluated = new DiceValue(givenMin, givenMax, new Random(1)).evaluate();
+        final Long evaluated = new MulitpleDiceValue(givenDiceAmount, givenMin, givenMax, new Random(1)).evaluate();
         Assertions.assertTrue(evaluated >= givenMin);
         Assertions.assertTrue(evaluated <= givenMin);
     }
