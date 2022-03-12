@@ -2,6 +2,7 @@ package com.example.dicecalc;
 
 import com.example.dicecalc.math.operations.Add;
 import com.example.dicecalc.math.operations.Multiply;
+import com.example.dicecalc.math.value.DiceValue;
 import com.example.dicecalc.math.value.SimpleValue;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 
+import java.util.Random;
 import java.util.stream.Stream;
 
 @WebFluxTest
@@ -45,4 +47,14 @@ public class ExpressionTests {
                 Arguments.arguments(-5L, -0L, 0L)
         );
     }
+
+    @Test
+    void diceValueTest() {
+        Long givenMin = 5L;
+        Long givenMax = 16L;
+        final Long evaluated = new DiceValue(givenMin, givenMax, new Random(1)).evaluate();
+        Assertions.assertTrue(evaluated >= givenMin);
+        Assertions.assertTrue(evaluated <= givenMin);
+    }
+
 }
