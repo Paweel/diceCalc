@@ -33,6 +33,8 @@ public class EquationParserCustomVisitor extends EquationParserBaseVisitor<Expre
 
     @Override
     public ExpressionComponent visitOperation(EquationParser.OperationContext ctx) {
+        if (ctx.LeftParenthesis() != null && ctx.RightParenthesis() != null)
+            return visitOperation(ctx.operation(0));
         if (ctx.Add() != null)
             return new Add(visitOperation(ctx.operation(0)), visitOperation(ctx.operation(1)));
         if (ctx.Multiply() != null)

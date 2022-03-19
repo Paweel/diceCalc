@@ -9,3 +9,5 @@ DiceSymbol
     : 'K'
     | 'k';
 Whitespace : [ \t\r\n]+ -> skip ;
+LeftParenthesis : '(' ;
+RightParenthesis : ')';

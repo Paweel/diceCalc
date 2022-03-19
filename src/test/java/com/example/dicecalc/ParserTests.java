@@ -25,7 +25,7 @@ public class ParserTests {
     public RandomGenerator random;
 
     @ParameterizedTest
-    @MethodSource({"addTestParameters", "multiplyTestParameters", "precedenceTestParameters", "diceTestParameters"})
+    @MethodSource({"addTestParameters", "multiplyTestParameters", "precedenceTestParameters", "diceTestParameters", "parenthesesTestParameters"})
     void parseAndEvaluateTree(String givenString, Long expectedResult) {
         final EquationLexer lexer = new EquationLexer(new ANTLRInputStream((givenString)));
         final EquationParser parser = new EquationParser(new CommonTokenStream(lexer));
@@ -68,4 +68,18 @@ public class ParserTests {
                 Arguments.arguments("3 + 5 * 1k10", 28L)
         );
     }
+
+    public static Stream<Arguments> parenthesesTestParameters() {
+        return Stream.of(
+                Arguments.arguments("(2 + 6) * 4", 32L),
+                Arguments.arguments("4 * (2 + 6)", 32L),
+                Arguments.arguments("4 + (2 + 6)", 12L),
+                Arguments.arguments("(3 + 5) * 2k6", 64L),
+                Arguments.arguments("(3 + 5) * 1k10", 40L),
+                Arguments.arguments("(3 * 5) * 1k10", 75L),
+                Arguments.arguments("1k10 * (3 * 5)", 75L),
+                Arguments.arguments("1k10 * ((3 + 5) * 5)", 200L)
+        );
+    }
+
 }

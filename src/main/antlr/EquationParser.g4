@@ -13,7 +13,8 @@ literal
 	;
 
 operation
-    : operation Multiply operation
+    : LeftParenthesis operation RightParenthesis
+    | operation Multiply operation
     | operation Add operation
     | literal;
 //
