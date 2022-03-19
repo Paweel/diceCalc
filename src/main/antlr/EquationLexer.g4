@@ -1,8 +1,8 @@
 lexer grammar EquationLexer;
 
 Integer
-    : '-'?[0-9]+;
-
+    : [0-9]+;
+Minus : '-';
 Add : '+';
 Multiply : '*';
 DiceSymbol

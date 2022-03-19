@@ -9,9 +9,9 @@ dice
     ;
 literal
 	: Integer
+	| Minus Integer
 	| dice
 	;
-
 operation
     : LeftParenthesis operation RightParenthesis
     | operation Multiply operation

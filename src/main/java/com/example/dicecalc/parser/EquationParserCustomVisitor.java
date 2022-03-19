@@ -9,6 +9,7 @@ import com.example.dicecalc.math.value.MulitpleDiceValue;
 import com.example.dicecalc.math.value.SimpleValue;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.antlr.v4.runtime.Token;
 
 import java.util.random.RandomGenerator;
 
@@ -24,6 +25,8 @@ public class EquationParserCustomVisitor extends EquationParserBaseVisitor<Expre
 
     @Override
     public ExpressionComponent visitLiteral(EquationParser.LiteralContext ctx) {
+        if (ctx.Minus() != null)
+            return new SimpleValue(-Long.parseLong(ctx.Integer().toString()));
         if (ctx.Integer() != null)
             return new SimpleValue(Long.valueOf(ctx.Integer().toString()));
         if (ctx.dice() != null)
@@ -46,6 +49,16 @@ public class EquationParserCustomVisitor extends EquationParserBaseVisitor<Expre
 
     @Override
     public ExpressionComponent visitDice(EquationParser.DiceContext ctx) {
-        return new MulitpleDiceValue(Long.valueOf(ctx.Integer(0).toString()), 1L, Long.valueOf(ctx.Integer(1).toString()), random);
+        final Long amount = Long.valueOf(ctx.Integer(0).toString());
+        final Long sides = Long.valueOf(ctx.Integer(1).toString());
+        if (amount <= 0L) {
+            final Token symbol = ctx.Integer(0).getSymbol();
+            CustomErrorListener.INSTANCE.syntaxError(null, symbol.getText(), symbol.getLine(), symbol.getCharPositionInLine(), "Dice amount must be more than 0", null);
+        }
+        if (sides <= 0L) {
+            final Token symbol = ctx.Integer(1).getSymbol();
+            CustomErrorListener.INSTANCE.syntaxError(null, symbol.getText(), symbol.getLine(), symbol.getCharPositionInLine(), "Dice sides number must be more than 0", null);
+        }
+        return new MulitpleDiceValue(amount, 1L, sides, random);
     }
 }
