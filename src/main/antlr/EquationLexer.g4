@@ -7,7 +7,9 @@ Add : '+';
 Multiply : '*';
 DiceSymbol
     : 'K'
-    | 'k';
+    | 'k'
+    | 'D'
+    | 'd';
 Whitespace : [ \t\r\n]+ -> skip ;
 LeftParenthesis : '(' ;
 RightParenthesis : ')';
