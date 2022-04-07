@@ -2,6 +2,8 @@ package com.example.dicecalc;
 
 import com.example.EquationLexer;
 import com.example.EquationParser;
+import com.example.dicecalc.math.DelayedRandomGenerator;
+import com.example.dicecalc.math.DelayedRandomGeneratorSimple;
 import com.example.dicecalc.math.ExpressionComponent;
 import com.example.dicecalc.parser.CustomErrorListener;
 import com.example.dicecalc.parser.EquationParserCustomVisitor;
@@ -13,6 +15,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import reactor.core.publisher.Flux;
 
 import java.util.Random;
 import java.util.random.RandomGenerator;
@@ -25,7 +28,7 @@ import static org.mockito.Mockito.when;
 public class ParserTests {
 
     @Mock
-    public RandomGenerator random;
+    public DelayedRandomGenerator random;
 
     @ParameterizedTest
     @MethodSource({"addTestParameters", "multiplyTestParameters", "precedenceTestParameters", "diceTestParameters", "parenthesesTestParameters"})
@@ -34,12 +37,12 @@ public class ParserTests {
         final EquationParser parser = new EquationParser(new CommonTokenStream(lexer));
 
         //k6 return 4
-        when(random.nextLong(1, 7)).thenReturn(4L);
+        when(random.longFlux(1L, 7L)).thenReturn(Flux.generate(sink -> sink.next(4L)));
         //k10 return 5
-        when(random.nextLong(1, 11)).thenReturn(5L);
+        when(random.longFlux(1L, 11L)).thenReturn(Flux.generate(sink -> sink.next(5L)));
         final EquationParserCustomVisitor customVisitor = new EquationParserCustomVisitor(random);
         final ExpressionComponent expressionComponent = customVisitor.visitStart(parser.start());
-        Assertions.assertEquals(expectedResult, expressionComponent.evaluate());
+        Assertions.assertEquals(expectedResult, expressionComponent.evaluate().block());
     }
     @ParameterizedTest
     @MethodSource({"errorsTestParameters"})

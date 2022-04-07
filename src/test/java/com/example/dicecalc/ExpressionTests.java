@@ -1,8 +1,9 @@
 package com.example.dicecalc;
 
-import com.example.dicecalc.math.operations.Add;
-import com.example.dicecalc.math.operations.Multiply;
-import com.example.dicecalc.math.value.MulitpleDiceValue;
+import com.example.dicecalc.math.DelayedRandomGeneratorSimple;
+import com.example.dicecalc.math.operations.Sum;
+import com.example.dicecalc.math.operations.Product;
+import com.example.dicecalc.math.value.MultipleDiceValue;
 import com.example.dicecalc.math.value.SimpleValue;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ public class ExpressionTests {
     @ParameterizedTest
     @MethodSource("addParameters")
     void addTest(Long givenA, Long givenB, Long expected) {
-        Assertions.assertEquals(expected, new Add(new SimpleValue(givenA), new SimpleValue(givenB)).evaluate());
+        Assertions.assertEquals(expected, new Sum(new SimpleValue(givenA), new SimpleValue(givenB)).evaluate().block());
     }
 
     public static Stream<Arguments> addParameters() {
@@ -35,7 +36,7 @@ public class ExpressionTests {
     @ParameterizedTest
     @MethodSource("multiplyParameters")
     void multiplyTest(Long givenA, Long givenB, Long expected) {
-        Assertions.assertEquals(expected, new Multiply(new SimpleValue(givenA), new SimpleValue(givenB)).evaluate());
+        Assertions.assertEquals(expected, new Product(new SimpleValue(givenA), new SimpleValue(givenB)).evaluate().block());
     }
 
     public static Stream<Arguments> multiplyParameters() {
@@ -53,7 +54,7 @@ public class ExpressionTests {
         Long givenDiceAmount = 1L;
         Long givenMin = 5L;
         Long givenMax = 16L;
-        final Long evaluated = new MulitpleDiceValue(givenDiceAmount, givenMin, givenMax, new Random(1)).evaluate();
+        final Long evaluated = new MultipleDiceValue(givenDiceAmount, givenMin, givenMax, new DelayedRandomGeneratorSimple(new Random(1))).evaluate().block();
         Assertions.assertTrue(evaluated >= givenMin);
         Assertions.assertTrue(evaluated <= givenMin);
     }

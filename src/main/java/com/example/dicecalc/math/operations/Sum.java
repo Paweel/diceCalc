@@ -2,16 +2,17 @@ package com.example.dicecalc.math.operations;
 
 import com.example.dicecalc.math.ExpressionComponent;
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Mono;
 
 import javax.validation.constraints.NotNull;
 
 @RequiredArgsConstructor
-public class Multiply implements ExpressionComponent {
+public class Sum implements ExpressionComponent {
     private final ExpressionComponent a;
     private final ExpressionComponent b;
 
     @Override
-    public @NotNull Long evaluate() {
-        return a.evaluate() * b.evaluate();
+    public @NotNull Mono<Long> evaluate() {
+        return Mono.zip(a.evaluate(), b.evaluate(), Long::sum);
     }
 }

@@ -2,21 +2,20 @@ package com.example.dicecalc.parser;
 
 import com.example.EquationParser;
 import com.example.EquationParserBaseVisitor;
+import com.example.dicecalc.math.DelayedRandomGenerator;
 import com.example.dicecalc.math.ExpressionComponent;
-import com.example.dicecalc.math.operations.Add;
-import com.example.dicecalc.math.operations.Multiply;
-import com.example.dicecalc.math.value.MulitpleDiceValue;
+import com.example.dicecalc.math.operations.Sum;
+import com.example.dicecalc.math.operations.Product;
+import com.example.dicecalc.math.value.MultipleDiceValue;
 import com.example.dicecalc.math.value.SimpleValue;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.antlr.v4.runtime.Token;
 
-import java.util.random.RandomGenerator;
-
 @Slf4j
 @AllArgsConstructor
 public class EquationParserCustomVisitor extends EquationParserBaseVisitor<ExpressionComponent> {
-    final RandomGenerator random;
+    final DelayedRandomGenerator random;
 
     @Override
     public ExpressionComponent visitStart(EquationParser.StartContext ctx) {
@@ -39,9 +38,9 @@ public class EquationParserCustomVisitor extends EquationParserBaseVisitor<Expre
         if (ctx.LeftParenthesis() != null && ctx.RightParenthesis() != null)
             return visitOperation(ctx.operation(0));
         if (ctx.Add() != null)
-            return new Add(visitOperation(ctx.operation(0)), visitOperation(ctx.operation(1)));
+            return new Sum(visitOperation(ctx.operation(0)), visitOperation(ctx.operation(1)));
         if (ctx.Multiply() != null)
-            return new Multiply(visitOperation(ctx.operation(0)), visitOperation(ctx.operation(1)));
+            return new Product(visitOperation(ctx.operation(0)), visitOperation(ctx.operation(1)));
         if (ctx.literal() != null)
             return visitLiteral(ctx.literal());
         throw new RuntimeException("operation not handled");
@@ -59,6 +58,6 @@ public class EquationParserCustomVisitor extends EquationParserBaseVisitor<Expre
             final Token symbol = ctx.Integer(1).getSymbol();
             CustomErrorListener.INSTANCE.syntaxError(null, symbol.getText(), symbol.getLine(), symbol.getCharPositionInLine(), "Dice sides number must be more than 0", null);
         }
-        return new MulitpleDiceValue(amount, 1L, sides, random);
+        return new MultipleDiceValue(amount, 1L, sides, random);
     }
 }
